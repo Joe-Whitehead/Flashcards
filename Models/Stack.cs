@@ -1,11 +1,12 @@
-﻿namespace Flashcards.Models
+﻿using System.ComponentModel.DataAnnotations;
+namespace Flashcards.Models
 {
-    internal class Stack(int id, string name, List<Flashcard> flashcards)
+    public class Stack
     {
-        public int Id { get; init; } = id;
-        public string Name { get; init; } = name;
-        public DateTime CreatedAt { get; init; } = DateTime.Now;
-        public List<Flashcard> Flashcards { get; set; } = flashcards ?? [];
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public DateTime CreatedAt { get; init; }
+        public List<Flashcard> Flashcards { get; set; }
 
         public bool AddFlashcard(Flashcard card)
         {
