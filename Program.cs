@@ -1,22 +1,18 @@
 ﻿using System;
 using Flashcards.Data;
 using Flashcards.Models;
+using Flashcards.Views;
 using Microsoft.EntityFrameworkCore;
 
-using (var context = new DatabaseContext())
-{
-    var stacks = context.Stacks
-        .Include(s => s.Flashcards)
-        .ToList();
+DbContext db = new DatabaseContext();
+FlashcardView app = new FlashcardView();
 
-    foreach (var stack in stacks)
-    {
-        Console.WriteLine($"Stack: {stack.Name} (Created at: {stack.CreatedAt})");  
-        foreach (var card in stack.Flashcards)
-        {
-            Console.WriteLine($"\tQuestion: {card.Question}");
-            Console.WriteLine($"\tAnswer: {card.Answer}");
-            Console.WriteLine();
-        }
-    }
+using (db)
+{
+    db.Database.Migrate();    
 }
+
+// Import some seed data here
+
+app.Run();
+
