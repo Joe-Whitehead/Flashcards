@@ -1,6 +1,6 @@
 ﻿namespace Flashcards.Models
 {
-    public class StudySession()
+    public class StudySession
     {
         public int Id { get; init; }
         public DateTime StartedAt { get; set; }
