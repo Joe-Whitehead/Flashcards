@@ -8,20 +8,27 @@ namespace Flashcards.Data
     {
         public static void SeedDatabase()
         {
-            using (var db = new DatabaseContext())
+            using var db = new DatabaseContext(); 
+            SeedDatabase(db);
+        }
+
+        public static void SeedDatabase(DatabaseContext db)
+        {
+            try
             {
-                try
+                if (!IsDatabaseSeeded(db))
                 {
-                    if (!IsDatabaseSeeded())
-                    {
-                        TestData();
-                    }
+                    TestData(db);
                 }
-                catch
+                else
                 {
-                    AnsiConsole.MarkupLine("[bold red]Clear Database before re-seeding[/]");
+                    throw new InvalidOperationException("Clear Database before re-seeding");
                 }
             }
+            catch (InvalidOperationException ex)
+            {
+                AnsiConsole.MarkupLine($"[bold red]{ex.Message}[/]");
+            }            
         }
 
         public static bool ClearDatabase()
@@ -49,16 +56,13 @@ namespace Flashcards.Data
 
         public static bool IsDatabaseSeeded()
         {
-            using (var db = new DatabaseContext())
-            {
-                return db.Stacks.Any() || db.Flashcards.Any();
-            }
-        }       
+            using var db = new DatabaseContext();
+            return IsDatabaseSeeded(db);
+        }
+        public static bool IsDatabaseSeeded(DatabaseContext db) =>  db.Stacks.Any() || db.Flashcards.Any();                         
 
-        private static void TestData()
+        private static void TestData(DatabaseContext db)
         {
-            using (var db = new DatabaseContext())
-            {
                 var spanishStack = new Stack
                 {
                     Name = "Spanish Basics",
@@ -126,8 +130,7 @@ namespace Flashcards.Data
                 };
 
                 db.Stacks.AddRange(spanishStack, mathStack, generalStack, englishStack, historyStack);
-                db.SaveChanges();
-            }
+                db.SaveChanges();            
         }
     }
 }
