@@ -62,6 +62,8 @@ namespace Flashcards.Views
                     Display.PressToContinue();
                     break;
                 case FlashcardMenu.ReturnToMainMenu:
+                    MainView mainMenuView = new MainView();
+                    mainMenuView.Run();
                     return;
             }
         }

@@ -22,7 +22,9 @@ namespace Flashcards.Controllers
                 Question = flashcardDto.Question,
                 Answer = flashcardDto.Answer,
                 CreatedAt = DateTime.UtcNow,
-                LastUpdated = DateTime.UtcNow
+                LastUpdated = DateTime.UtcNow,
+                StackId = 1 // Default stack
+
             };
 
             return _flashcardRepository.InsertFlashcard(flashcard);
