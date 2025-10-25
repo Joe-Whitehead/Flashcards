@@ -5,7 +5,7 @@ using Flashcards.Views;
 using Microsoft.EntityFrameworkCore;
 
 DbContext db = new DatabaseContext();
-FlashcardView app = new FlashcardView();
+MainView app = new MainView();
 
 using (db)
 {

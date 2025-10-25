@@ -26,7 +26,7 @@ namespace Flashcards.Helpers
         {
             var selectedItem = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Please select an [cyan]item[/] from the list:")
+                    .Title("Please select an [blue]item[/] from the list:")
                     .AddChoices(options.Keys)
             );
 
@@ -46,13 +46,13 @@ namespace Flashcards.Helpers
         public static void ShowTitle(string title)
         {
             AnsiConsole.Clear();
-            AnsiConsole.MarkupLine($"[underline cyan]{title}[/]");
+            AnsiConsole.MarkupLine($"[underline green]{title}[/]");
         }
 
         public static void PressToContinue()
         {
             AnsiConsole.Markup("[red]----------------------------[/]");
-            AnsiConsole.MarkupLine("\nPress [green]any key[/] to continue...");
+            AnsiConsole.MarkupLine("\nPress any key to continue...");
             Console.ReadKey(true);
         }
     }
