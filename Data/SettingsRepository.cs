@@ -4,15 +4,22 @@ using Spectre.Console;
 
 namespace Flashcards.Data
 {
-    internal static class SeedData
+    internal static class SettingsRepository
     {
         public static void SeedDatabase()
         {
             using (var db = new DatabaseContext())
             {
-                if (!IsDatabaseSeeded())
+                try
                 {
-                    TestData();
+                    if (!IsDatabaseSeeded())
+                    {
+                        TestData();
+                    }
+                }
+                catch
+                {
+                    AnsiConsole.MarkupLine("[bold red]Clear Database before re-seeding[/]");
                 }
             }
         }
@@ -40,7 +47,7 @@ namespace Flashcards.Data
             }
         }
 
-        private static bool IsDatabaseSeeded()
+        public static bool IsDatabaseSeeded()
         {
             using (var db = new DatabaseContext())
             {
