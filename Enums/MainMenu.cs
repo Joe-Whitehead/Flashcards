@@ -12,6 +12,8 @@ namespace Flashcards.Enums
         ManageStacks,
         [Display(Name = "View Statistics")]
         ViewStatistics,
+        [Display(Name = "Settings")]
+        Settings,
         [Display(Name = "Exit Application")]
         ExitApplication
     }
