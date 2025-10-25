@@ -33,6 +33,11 @@ namespace Flashcards.Helpers
             return options[selectedItem];
         }
 
+        public static bool YesNoPrompt(string message)
+        {
+            return AnsiConsole.Confirm(message);
+        }
+
         public static void SetPageTitle(string title)
         {
             Console.Title = $"Flashcards - {title}";

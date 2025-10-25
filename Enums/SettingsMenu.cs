@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace Flashcards.Enums
 {
-    internal enum SettingMenu
+    internal enum SettingsMenu
     {
         [Display(Name = "Insert Test Data")]
-        InsertTestData = 1,
+        SeedDatabase = 1,
         [Display(Name = "Clear All Data")]
-        ClearAllData,
+        ClearDatabase,
         [Display(Name = "Back to Main Menu")]
         BackToMainMenu
     }

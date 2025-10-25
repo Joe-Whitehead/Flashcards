@@ -34,6 +34,10 @@ namespace Flashcards.Views
                         var flashcardMenu = Display.GetMenuItems<FlashcardMenu>();
                         var flashcardOption = Display.PromptMenuSelection(flashcardMenu);
                         break;
+                        
+                    case MainMenu.Settings:
+                        SettingsView.Run();
+                        break;
 
                     case MainMenu.ExitApplication:
                         Console.Clear();
