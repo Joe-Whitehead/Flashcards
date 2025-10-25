@@ -6,10 +6,8 @@ namespace Flashcards.Enums
     {
         [Display(Name = "Study Flashcards")]
         StudyFlashcards = 1,
-        [Display(Name = "Manage Flashcards")]
-        ManageFlashcards,
-        [Display(Name = "Manage Stacks")]
-        ManageStacks,
+        [Display(Name = "Manage Stacks & Flashcards")]
+        ManageStacksCards,
         [Display(Name = "View Statistics")]
         ViewStatistics,
         [Display(Name = "Settings")]

@@ -7,27 +7,16 @@ namespace Flashcards.Controllers
     public class FlashcardController
     {
         private readonly FlashcardRepository _flashcardRepository;
-        private readonly StackRepository _stackRepository;
         
         public FlashcardController() 
         { 
             _flashcardRepository = new FlashcardRepository();
-            _stackRepository = new StackRepository();
+            //_stackRepository = new StackRepository();
         }
 
-        public bool CreateFlashcard(FlashcardDTO flashcardDto)
-        {
-            var flashcard = new Flashcard
-            {
-                Question = flashcardDto.Question,
-                Answer = flashcardDto.Answer,
-                CreatedAt = DateTime.UtcNow,
-                LastUpdated = DateTime.UtcNow,
-                StackId = 1 // Default stack
-
-            };
-
-            return _flashcardRepository.InsertFlashcard(flashcard);
+        public void CreateFlashcard(Flashcard flashcard)
+        {           
+            
         }
 
         public bool UpdateFlashcard(int id, FlashcardDTO flashcardDto)

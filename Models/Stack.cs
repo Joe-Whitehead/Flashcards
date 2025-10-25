@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Flashcards.DTOs;
+
 namespace Flashcards.Models
 {
     public class Stack
     {
         public int Id { get; init; }        
-        public string Name { get; init; }
+        public string Name { get; set; }
         public DateTime CreatedAt { get; init; }
         public List<Flashcard> Flashcards { get; set; }
 

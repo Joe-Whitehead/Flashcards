@@ -1,8 +1,56 @@
 ﻿using Flashcards.Models;
+using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
+
 namespace Flashcards.Data
 {
-    internal class StackRepository
+    public class StackRepository
     {
+        public List<Stack> GetAllStacks()
+        {
+            using var db = new DatabaseContext();
+            return db.Stacks
+                .Include(s => s.Flashcards)
+                .ToList();
+        }
+
+        public Stack GetStack(int id)
+        {
+            using var db = new DatabaseContext();
+            return db.Stacks.FirstOrDefault(s => s.Id == id);
+        }
+
+        public bool AddStack(Stack stack)
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                db.Stacks.Add(stack);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.Markup($"Failed to add Stack: {ex.Message}");
+                return false;
+            }
+            
+        }
+
+        public bool UpdateStack(Stack stack)
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                db.Stacks.Update(stack);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.Markup($"Failed to update Stack: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

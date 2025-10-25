@@ -1,4 +1,6 @@
-﻿using Spectre.Console;
+﻿using Flashcards.DTOs;
+using Flashcards.Models;
+using Spectre.Console;
 using System.ComponentModel.DataAnnotations;
 
 namespace Flashcards.Helpers
@@ -21,8 +23,7 @@ namespace Flashcards.Helpers
             return attribute?.Name ?? value.ToString();
         }
 
-        public static TEnum PromptMenuSelection<TEnum>(Dictionary<string, TEnum> options)
-            where TEnum : struct, Enum
+        public static T PromptMenuSelection<T>(Dictionary<string, T> options)
         {
             var selectedItem = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -31,6 +32,21 @@ namespace Flashcards.Helpers
             );
 
             return options[selectedItem];
+        }
+
+        public static Dictionary<string, Stack> GetModelItems(List<Stack> stacks)
+        {
+            return stacks.ToDictionary(
+                stack => StackDTO.ToDisplayString(stack),
+                stack => stack
+            );
+        }
+        public static Dictionary<string, Flashcard> GetModelItems(List<Flashcard> flashcards)
+        {
+            return flashcards.ToDictionary(
+                card => $"{card.Question} (Answer: {card.Answer})",
+                card => card
+            );
         }
 
         public static bool YesNoPrompt(string message)
@@ -54,6 +70,11 @@ namespace Flashcards.Helpers
             AnsiConsole.Markup("[red]----------------------------[/]");
             AnsiConsole.MarkupLine("\nPress any key to continue...");
             Console.ReadKey(true);
+        }
+
+        public static string PromptInput(string message)
+        {
+            return AnsiConsole.Ask<string>(message);
         }
     }
 }

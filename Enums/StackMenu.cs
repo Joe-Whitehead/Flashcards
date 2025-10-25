@@ -4,9 +4,9 @@ namespace Flashcards.Enums
 {
     internal enum StackMenu
     {
-        [Display(Name = "Create Stack")]
+        [Display(Name = "Create New Stack")]
         AddStack = 1,
-        [Display(Name = "Edit Existing Stack")]
+        [Display(Name = "Edit Existing Stacks")]
         EditExistingStack,
         [Display(Name = "Delete Stack")]
         DeleteStack,
