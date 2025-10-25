@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Flashcards.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,7 +51,9 @@ namespace Flashcards.Migrations
                     Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StackId = table.Column<int>(type: "int", nullable: true)
+                    LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StackId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,7 +62,8 @@ namespace Flashcards.Migrations
                         name: "FK_Flashcards_Stacks_StackId",
                         column: x => x.StackId,
                         principalTable: "Stacks",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

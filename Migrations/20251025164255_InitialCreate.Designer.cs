@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Flashcards.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251023193137_RemoveLimit")]
-    partial class RemoveLimit
+    [Migration("20251025164255_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,11 +40,17 @@ namespace Flashcards.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("LastReviewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StackId")
+                    b.Property<int>("StackId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -107,7 +113,9 @@ namespace Flashcards.Migrations
                 {
                     b.HasOne("Flashcards.Models.Stack", null)
                         .WithMany("Flashcards")
-                        .HasForeignKey("StackId");
+                        .HasForeignKey("StackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Flashcards.Models.Stack", b =>

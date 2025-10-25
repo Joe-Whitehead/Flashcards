@@ -12,7 +12,5 @@ using (db)
     db.Database.Migrate();    
 }
 
-// Import some seed data here
-
 app.Run();
 

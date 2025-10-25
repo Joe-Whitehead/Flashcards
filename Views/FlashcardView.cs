@@ -36,6 +36,17 @@ namespace Flashcards.Views
             switch (selectedOption)
             {
                 case FlashcardMenu.AddNewFlashcard:
+                    var newFlashcardDto = Flashcard();
+                    var created = _flashcardController.CreateFlashcard(newFlashcardDto);
+                    if (created)
+                    {
+                        AnsiConsole.MarkupLine("[green]Flashcard created successfully![/]");
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine("[red]Failed to create flashcard.[/]");
+                    }
+                    Display.PressToContinue();
                     break;
                 case FlashcardMenu.EditExistingFlashcard:
                     break;
@@ -53,6 +64,14 @@ namespace Flashcards.Views
                 case FlashcardMenu.ReturnToMainMenu:
                     return;
             }
+        }
+
+        private FlashcardDTO Flashcard()
+        {
+            var flashcardDto = new FlashcardDTO();
+            flashcardDto.Question = AnsiConsole.Ask<string>("Enter the [green]question[/]:");
+            flashcardDto.Answer = AnsiConsole.Ask<string>("Enter the [green]answer[/]:");
+            return flashcardDto;
         }
 
         private void DisplayFlashcard(FlashcardDTO flashcard)

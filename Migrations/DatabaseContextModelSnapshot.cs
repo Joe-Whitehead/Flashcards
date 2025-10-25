@@ -47,7 +47,7 @@ namespace Flashcards.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StackId")
+                    b.Property<int>("StackId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -110,7 +110,9 @@ namespace Flashcards.Migrations
                 {
                     b.HasOne("Flashcards.Models.Stack", null)
                         .WithMany("Flashcards")
-                        .HasForeignKey("StackId");
+                        .HasForeignKey("StackId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Flashcards.Models.Stack", b =>

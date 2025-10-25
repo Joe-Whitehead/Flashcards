@@ -10,6 +10,7 @@ namespace Flashcards.Models
         public DateTime CreatedAt { get; init; }
         public DateTime LastUpdated { get; set; }        
         public DateTime LastReviewedAt { get; set; }
+        public int StackId { get; set; }
         [NotMapped]
         public DateTime LoadedFromDb { get; set; }
         [NotMapped]
