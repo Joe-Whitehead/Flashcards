@@ -17,7 +17,18 @@ namespace Flashcards.Data
         public Stack GetStack(int id)
         {
             using var db = new DatabaseContext();
-            return db.Stacks.FirstOrDefault(s => s.Id == id);
+            try
+            {
+                return db.Stacks.Single(s => s.Id == id);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new InvalidOperationException($"No stack exists with ID: {id}.");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving stack: {ex.Message}", ex);
+            }        
         }
 
         public bool AddStack(Stack stack)

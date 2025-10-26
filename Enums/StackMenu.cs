@@ -15,4 +15,16 @@ namespace Flashcards.Enums
         [Display(Name = "Return to Main Menu")]
         ReturnToMainMenu
     }
+
+    internal enum EditStackMenu
+    {
+        [Display(Name = "Add Flashcard to Stack")]
+        AddFlashcardToStack = 1,
+        [Display(Name = "Edit Flashcard in Stack")]
+        EditFlashcardInStack,
+        [Display(Name = "Delete Flashcard from Stack")]
+        DeleteFlashcardFromStack,
+        [Display(Name = "Return to Manage Stacks Menu")]
+        ReturnToManageStacksMenu
+    }
 }

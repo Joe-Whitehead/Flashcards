@@ -15,19 +15,6 @@ namespace Flashcards.Controllers
             _flashcardRepository = new FlashcardRepository();
         }
 
-        public List<Stack> GetStackList()
-        {
-            var stacks = _stackRepository.GetAllStacks();
-            var stackDtos = stacks
-                .OrderBy(s => s.Id)
-                .Select((s, i) => new Stack
-                {
-                    Name = s.Name                    
-                })
-                .ToList();
-            return stackDtos;
-        }
-
         public List<StackDTO> GetAllStackDtos()
         {
             return GetAllStacks()
@@ -49,7 +36,7 @@ namespace Flashcards.Controllers
             {
                 Name = stack.Name,
                 CreatedAt = DateTime.Now,
-                Flashcards = MapFlashcards(stack.Flashcards ?? new List<FlashcardDTO>())
+                Flashcards = MapFlashcards(stack.Flashcards)
             };
             return _stackRepository.AddStack(newStack);           
         }
@@ -75,6 +62,23 @@ namespace Flashcards.Controllers
             }
             existingStack.Name = stack.Name;            
             return _stackRepository.UpdateStack(existingStack);
+        }
+
+        public bool AddFlashcardToStack(int stackid, FlashcardDTO flashcardDto)
+        {
+            var stack = _stackRepository.GetStack(stackid);
+            if (stack == null)
+            {
+                return false;
+            }
+            return _flashcardRepository.InsertFlashcard(new Flashcard
+            {
+                Question = flashcardDto.Question,
+                Answer = flashcardDto.Answer,
+                StackId = stack.Id,
+                CreatedAt = DateTime.Now,
+                LastUpdated = DateTime.Now
+            });           
         }
     }
 }

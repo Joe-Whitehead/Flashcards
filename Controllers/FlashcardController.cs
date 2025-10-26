@@ -12,12 +12,7 @@ namespace Flashcards.Controllers
         { 
             _flashcardRepository = new FlashcardRepository();
             //_stackRepository = new StackRepository();
-        }
-
-        public void CreateFlashcard(Flashcard flashcard)
-        {           
-            
-        }
+        }      
 
         public bool UpdateFlashcard(int id, FlashcardDTO flashcardDto)
         {
@@ -40,8 +35,6 @@ namespace Flashcards.Controllers
                 .OrderBy(f => f.Id)
                 .Select((f, i) => new FlashcardDTO
                 {
-                    DisplayIndex = i + 1,
-                    Id = f.Id,
                     Question = f.Question,
                     Answer = f.Answer,
                     StackName = f.StackName ?? string.Empty

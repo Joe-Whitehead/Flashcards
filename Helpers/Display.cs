@@ -25,12 +25,12 @@ namespace Flashcards.Helpers
 
         public static T PromptMenuSelection<T>(Dictionary<string, T> options)
         {
+            string typeName = typeof(T).IsEnum ? "item" : typeof(T).Name;
             var selectedItem = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title("Please select an [blue]item[/] from the list:")
+                    .Title($"Please select [blue]{typeName}[/] from the list:")
                     .AddChoices(options.Keys)
             );
-
             return options[selectedItem];
         }
 
@@ -44,7 +44,7 @@ namespace Flashcards.Helpers
         public static Dictionary<string, Flashcard> GetModelItems(List<Flashcard> flashcards)
         {
             return flashcards.ToDictionary(
-                card => $"{card.Question} (Answer: {card.Answer})",
+                card => FlashcardDTO.ToDisplayString(card),
                 card => card
             );
         }
