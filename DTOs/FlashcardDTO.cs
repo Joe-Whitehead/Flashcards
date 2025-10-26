@@ -5,7 +5,6 @@ namespace Flashcards.DTOs
     {
         public string Question { get; set; }
         public string Answer { get; set; }
-        public string StackName { get; set; }
 
 
         public static FlashcardDTO ToDto(Flashcard flashcard)
@@ -13,14 +12,13 @@ namespace Flashcards.DTOs
             return new FlashcardDTO
             {
                 Question = flashcard.Question,
-                Answer = flashcard.Answer,
-                StackName = flashcard.StackName ?? string.Empty
+                Answer = flashcard.Answer
             };
         }
 
         public static string ToDisplayString(Flashcard flashcard)
         {
-            return $"Q: {flashcard.Question} | A: {flashcard.Answer} | Stack: {flashcard.StackName}";
+            return $"Q: {flashcard.Question} | A: {flashcard.Answer}";
         }
     }
 }

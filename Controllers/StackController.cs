@@ -30,6 +30,11 @@ namespace Flashcards.Controllers
             .ToList();
         }
 
+        public Stack GetStackById(int id)
+        {
+            return _stackRepository.GetStack(id);
+        }
+
         public bool AddNewStack(StackDTO stack)
         {
             var newStack = new Stack
@@ -80,5 +85,24 @@ namespace Flashcards.Controllers
                 LastUpdated = DateTime.Now
             });           
         }
+
+        public bool DeleteStack(int id)
+        {
+            var existingStack = _stackRepository.GetStack(id);
+            if (existingStack == null)
+            {
+                return false;
+            }
+
+            if (existingStack.Flashcards != null && existingStack.Flashcards.Any())
+            {
+                foreach (var card in existingStack.Flashcards)
+                {
+                    _flashcardRepository.DeleteFlashcard(card);
+                }
+            }
+            return _stackRepository.DeleteStack(existingStack);
+        }
     }
 }
+

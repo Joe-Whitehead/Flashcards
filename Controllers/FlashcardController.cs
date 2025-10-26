@@ -29,15 +29,14 @@ namespace Flashcards.Controllers
 
         public List<FlashcardDTO> GetAllFlashcards()
         {
-            var flashcards = _flashcardRepository.GetAllFlashcards();
+            var flashcards = _flashcardRepository.GetAllFlashcards();               
 
             var flashcardDtos = flashcards
                 .OrderBy(f => f.Id)
                 .Select((f, i) => new FlashcardDTO
                 {
                     Question = f.Question,
-                    Answer = f.Answer,
-                    StackName = f.StackName ?? string.Empty
+                    Answer = f.Answer
                 })
                 .ToList();
 

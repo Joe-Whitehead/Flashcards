@@ -19,7 +19,10 @@ namespace Flashcards.Data
             using var db = new DatabaseContext();
             try
             {
-                return db.Stacks.Single(s => s.Id == id);
+                return db.Stacks
+                    .Include(s => s.Flashcards)
+                    .Single(s => s.Id == id);
+                    
             }
             catch (InvalidOperationException)
             {
@@ -60,6 +63,21 @@ namespace Flashcards.Data
             catch (Exception ex)
             {
                 AnsiConsole.Markup($"Failed to update Stack: {ex.Message}");
+                return false;
+            }
+        }
+        public bool DeleteStack(Stack stack)
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                db.Stacks.Remove(stack);
+                db.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.Markup($"Failed to delete Stack: {ex.Message}");
                 return false;
             }
         }

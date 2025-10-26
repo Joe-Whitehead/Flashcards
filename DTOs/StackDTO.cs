@@ -15,8 +15,7 @@ namespace Flashcards.DTOs
                 Flashcards = stack.Flashcards.Select((f, j) => new FlashcardDTO
                 {
                     Question = f.Question,
-                    Answer = f.Answer,
-                    StackName = stack.Name
+                    Answer = f.Answer
                 }).ToList()
             };
         }
