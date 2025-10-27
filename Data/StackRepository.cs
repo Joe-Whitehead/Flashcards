@@ -9,9 +9,16 @@ namespace Flashcards.Data
         public List<Stack> GetAllStacks()
         {
             using var db = new DatabaseContext();
-            return db.Stacks
-                .Include(s => s.Flashcards)
-                .ToList();
+            try
+            {
+                return db.Stacks
+                    .Include(s => s.Flashcards)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving stacks: {ex.Message}", ex);
+            }
         }
 
         public Stack GetStack(int id)
@@ -47,8 +54,7 @@ namespace Flashcards.Data
             {
                 AnsiConsole.Markup($"Failed to add Stack: {ex.Message}");
                 return false;
-            }
-            
+            }            
         }
 
         public bool UpdateStack(Stack stack)
@@ -66,6 +72,7 @@ namespace Flashcards.Data
                 return false;
             }
         }
+
         public bool DeleteStack(Stack stack)
         {
             using var db = new DatabaseContext();
