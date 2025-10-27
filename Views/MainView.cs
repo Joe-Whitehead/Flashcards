@@ -55,12 +55,11 @@ namespace Flashcards.Views
                         Environment.Exit(0);
                         break;
                 }
-                //Display.PressToContinue();
             }
         }
 
         private void ManageStacksAndCards()
-        {            
+        {
             Console.Clear();
             Display.SetPageTitle("Manage");
             Display.ShowTitle("Manage Stacks & Flashcards");
@@ -70,14 +69,14 @@ namespace Flashcards.Views
             switch (selectedOption)
             {
                 case StackMenu.AddStack:
-                    string stackName = UniqueName();
+                    string stackName = Validation.UniqueName(_stackController.GetAllStackNames());
                     List<FlashcardDTO> flashcards = [];
 
                     if (Display.YesNoPrompt("Would you like to add a flashcard to this stack now?"))
                     {
                         while (true)
                         {
-                            flashcards.Add(PromptFlashcardDetails());
+                            flashcards.Add(Display.PromptFlashcardDetails());
 
                             if (!Display.YesNoPrompt("Would you like to add another flashcard?"))
                             {
@@ -95,17 +94,17 @@ namespace Flashcards.Views
                 case StackMenu.EditExistingStack:
                     GetStackSubMenu(DisplayStackMenu());
                     break;
-            
+
                 case StackMenu.DeleteStack:
                     var stackToDelete = DisplayStackMenu();
                     if (Display.YesNoPrompt("Are you sure you want to delete this stack? (This will also delete any Flashcards in the stack)"))
                     {
                         _stackController.DeleteStack(stackToDelete.Id);
-                        AnsiConsole.MarkupLine("[green]Stack deleted successfully.[/]");
+                        Display.SuccessMessage("Stack deleted successfully");
                     }
                     else
                     {
-                        AnsiConsole.MarkupLine("[yellow]Deletion cancelled.[/]");
+                        Display.CancelledMessage("Deletion cancelled.");
                     }
                     Display.PressToContinue();
                     break;
@@ -121,39 +120,40 @@ namespace Flashcards.Views
         private void GetStackSubMenu(Stack stack)
         {
             bool exitSubMenu = false;
+
             while (!exitSubMenu)
-            {            
-            Dictionary<string, Flashcard> flashcards;
-            Flashcard selectedFlashcard;            
-            Console.Clear();
-            Display.SetPageTitle("Manage");
-            Display.ShowTitle("Stack Management Menu");
-            AnsiConsole.MarkupLine($"""
-                [red]------------------------------[/]
-                Managing Stack: [cyan]{stack.Name}[/]
-                Number of Flashcards: [cyan]{stack.Flashcards.Count}[/]
-                [red]------------------------------[/]
-                """);
+            {
+                Dictionary<string, Flashcard> flashcards;
+                Flashcard selectedFlashcard;
+                Console.Clear();
+                Display.SetPageTitle("Manage");
+                Display.ShowTitle("Stack Management Menu");
+
+                Display.StackOverview(StackDTO.ToDto(stack));
+
+                var menuItems = Display.GetMenuItems<EditStackMenu>();                
+                var selectedOption = Display.PromptMenuSelection(menuItems);
                 
-            var menuItems = Display.GetMenuItems<EditStackMenu>();
-            var selectedOption = Display.PromptMenuSelection(menuItems);
+
                 switch (selectedOption)
                 {
                     case EditStackMenu.RenameStack:
-                        stack.Name = UniqueName();
+                        string prevName = stack.Name;
+                        stack.Name = Validation.UniqueName(_stackController.GetAllStackNames());
                         if (_stackController.EditStack(stack))
                         {
-                            AnsiConsole.MarkupLine("[green]Stack renamed successfully.[/]");
+                            Console.Clear();
+                            Display.SuccessMessage($"Stack renamed from {prevName} to {stack.Name}.");
                         }
                         Display.PressToContinue();
                         RefreshStack(stack);
                         break;
 
                     case EditStackMenu.AddFlashcardToStack:
-                        var flashcardDto = PromptFlashcardDetails();
+                        var flashcardDto = Display.PromptFlashcardDetails();
                         if (_stackController.AddFlashcardToStack(stack.Id, flashcardDto))
                         {
-                            AnsiConsole.MarkupLine("[green]Flashcard added successfully.[/]");
+                            Display.SuccessMessage("Flashcard added successfully.");
                         }
                         Display.PressToContinue();
                         RefreshStack(stack);
@@ -162,11 +162,11 @@ namespace Flashcards.Views
                     case EditStackMenu.EditFlashcardInStack:
                         flashcards = Display.GetModelItems(stack.Flashcards);
                         selectedFlashcard = Display.PromptMenuSelection<Flashcard>(flashcards);
-                        var updatedFlashcardDto = PromptFlashcardDetails(selectedFlashcard.Question, selectedFlashcard.Answer);
+                        var updatedFlashcardDto = Display.PromptFlashcardDetails(selectedFlashcard.Question, selectedFlashcard.Answer);
 
                         if (_flashcardController.UpdateFlashcard(selectedFlashcard.Id, updatedFlashcardDto))
                         {
-                            AnsiConsole.MarkupLine("[green]Flashcard updated successfully.[/]");
+                            Display.SuccessMessage("Flashcard updated successfully.");
                         }
                         Display.PressToContinue();
                         RefreshStack(stack);
@@ -175,19 +175,18 @@ namespace Flashcards.Views
                     case EditStackMenu.DeleteFlashcardFromStack:
                         flashcards = Display.GetModelItems(stack.Flashcards);
                         selectedFlashcard = Display.PromptMenuSelection<Flashcard>(flashcards);
-                        AnsiConsole.MarkupLine($"""
-                            You have selected to delete the following flashcard:
-                            Question: [red]{selectedFlashcard.Question}[/]
-                            Answer: [red]{selectedFlashcard.Answer}[/]
-                            """);
+
+                        Display.WarningMessage("You are about to delete the following flashcard");
+                        Display.SingleFlashcardView(selectedFlashcard);
+
                         if (Display.YesNoPrompt("Are you sure you want to delete this flashcard?"))
                         {
                             _flashcardController.DeleteFlashcard(selectedFlashcard.Id);
-                            AnsiConsole.MarkupLine("[green]Flashcard deleted successfully.[/]");
-                        }                   
+                            Display.SuccessMessage("Flashcard deleted successfully.");
+                        }
                         else
                         {
-                            AnsiConsole.MarkupLine("[yellow]Deletion cancelled.[/]");
+                            Display.CancelledMessage("Deletion cancelled.");
                         }
                         Display.PressToContinue();
                         RefreshStack(stack);
@@ -196,24 +195,8 @@ namespace Flashcards.Views
                     case EditStackMenu.ReturnToMainMenu:
                         exitSubMenu = true;
                         break;
-                }                    
+                }
             }
-        }
-
-        private FlashcardDTO PromptFlashcardDetails(string? existingQuestion = null, string? existingAnswer = null)
-        {
-            if (existingQuestion != null && existingAnswer != null)
-            {
-                AnsiConsole.MarkupLine($"Current Question: [blue]{existingQuestion}[/]");
-                AnsiConsole.MarkupLine($"Current Answer: [blue]{existingAnswer}[/]");
-            }
-            string question = Display.PromptInput($"Enter the question for the flashcard: ");
-            string answer = Display.PromptInput("Enter the answer for the flashcard: ");
-            return new FlashcardDTO
-            {
-                Question = question,
-                Answer = answer
-            };
         }
 
         private void RefreshStack(Stack stack)
@@ -229,17 +212,6 @@ namespace Flashcards.Views
             var stackList = _stackController.GetAllStacks();
             var stackMenuItems = Display.GetModelItems(stackList);
             return Display.PromptMenuSelection<Stack>(stackMenuItems);
-        }
-
-        private string UniqueName()
-        {
-            string stackName = Display.PromptInput("Enter the new name for the stack: ");
-            while (Validation.StackExists(stackName, _stackController.GetAllStacks()))
-            {
-                stackName = Display.PromptInput("A stack with that name already exists. Please enter a unique name for the new stack: ");
-            }
-
-            return stackName;
         }
     }
 }

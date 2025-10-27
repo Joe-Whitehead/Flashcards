@@ -30,6 +30,11 @@ namespace Flashcards.Controllers
             .ToList();
         }
 
+        public List<string> GetAllStackNames()
+        {
+            return _stackRepository.GetAllStackNames();
+        }
+
         public Stack GetStackById(int id)
         {
             return _stackRepository.GetStack(id);

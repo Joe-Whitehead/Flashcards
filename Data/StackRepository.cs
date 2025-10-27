@@ -21,6 +21,21 @@ namespace Flashcards.Data
             }
         }
 
+        public List<string> GetAllStackNames()
+        {
+            using var db = new DatabaseContext();
+            try
+            {
+                return db.Stacks
+                    .Select(s => s.Name)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Unexpected error retrieving stack names: {ex.Message}", ex);
+            }
+        }
+
         public Stack GetStack(int id)
         {
             using var db = new DatabaseContext();
