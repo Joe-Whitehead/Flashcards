@@ -147,50 +147,34 @@ namespace Flashcards.Helpers
             AnsiConsole.Write(table);
         }
 
-       public static void StackOverview(StackDTO stack)
+        public static void StackOverview(StackDTO stack)
         {
-            var layout = new Layout("Root")
-                .SplitColumns(
-                new Layout("Spacer").Size(40),
-                    new Layout("Right")
-                    .SplitRows(
-                        new Layout("Top"), 
-                        new Layout("Bottom"))
-                );
-
-            //Top Layout - Stack Info
-            layout["Top"].Update(
-                new Panel(                    
-                    Align.Center(
-                        new Markup($"[bold yellow]Stack Name:[/] [white]{stack.Name}[/]\n[bold yellow]Number of Flashcards:[/] [white]{stack.Flashcards.Count}[/]")
-                        )                                                
-                    )
-                .Header("Stack Information", Justify.Center)
-                .BorderColor(Color.Green)
-                );
-
-            //Bottom Layout - Flashcards
             int counter = 1;
             var flashcardText = new StringBuilder();
             foreach (var card in stack.Flashcards)
             {
-                flashcardText.AppendLine($"{counter++}. [blue]{card.Question}[/] | [green]{card.Answer}[/]");
+                flashcardText.AppendLine($"{counter++}. Q: [blue]{card.Question}[/] | A: [green]{card.Answer}[/]");
                 if (counter < stack.Flashcards.Count + 1)
                 {
                     flashcardText.AppendLine();
                 }
             }
-            layout["Bottom"].Update(
-                new Panel(                    
-                    Align.Center(
-                        new Markup(flashcardText.ToString())
-                        )                                                
-                    )
-                .Header("Flashcards", Justify.Center)
-                .BorderColor(Color.Purple)
-                );
+            var grid = new Grid()
+                .AddColumn()
+                .AddColumn();
+            grid.AddRow(
+                new Panel(
+                    new Markup(flashcardText.ToString()))
+                    .Header("Flashcards", Justify.Center)
+                    .BorderColor(Color.Purple),
 
-            AnsiConsole.Write(layout);
+                new Panel(
+                    new Markup($"[bold yellow]Stack Name:[/] [white]{stack.Name}[/]\n[bold yellow]Number of Flashcards:[/] [white]{stack.Flashcards.Count}[/]"))
+                    .Header("Stack Information", Justify.Center)
+                    .BorderColor(Color.Green)    
+                    .Padding(8, 0)
+            );
+            AnsiConsole.Write(grid);
         }
        
     }
