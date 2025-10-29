@@ -7,7 +7,7 @@ namespace Flashcards.DTOs
         public List<FlashcardDTO> Flashcards { get; set; }
 
 
-        public static StackDTO ToDto(Stack stack)
+       /* public static StackDTO ToDto(Stack stack)
         {
             return new StackDTO
             {
@@ -18,7 +18,7 @@ namespace Flashcards.DTOs
                     Answer = f.Answer
                 }).ToList()
             };
-        }
+        }*/
 
         public static string ToDisplayString(Stack stack)
         {

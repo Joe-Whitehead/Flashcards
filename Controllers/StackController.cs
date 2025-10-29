@@ -19,7 +19,7 @@ namespace Flashcards.Controllers
         {
             return GetAllStacks()
             .OrderBy(s => s.Id)
-            .Select(StackDTO.ToDto)
+            .Select(s => s.ToDto())
             .ToList();
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using Flashcards.DTOs;
 
 namespace Flashcards.Models
@@ -29,6 +30,19 @@ namespace Flashcards.Models
                 return false;
             }
             return Flashcards.Remove(card);            
+        }
+
+        public StackDTO ToDto()
+        {
+            return new StackDTO
+            {
+                Name = this.Name,
+                Flashcards = this.Flashcards.Select((f, j) => new FlashcardDTO
+                {
+                    Question = f.Question,
+                    Answer = f.Answer
+                }).ToList()
+            };
         }
 
     }

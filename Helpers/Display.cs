@@ -1,10 +1,13 @@
 ﻿using Flashcards.DTOs;
 using Flashcards.Enums;
 using Flashcards.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Text;
 
 namespace Flashcards.Helpers
@@ -71,9 +74,9 @@ namespace Flashcards.Helpers
             AnsiConsole.MarkupLine($"[underline green]{title}[/]");
         }
 
-        public static void PressToContinue()
+        public static void PressToContinue(string message = "Press any key to continue...")
         {
-            AnsiConsole.Markup("[grey]Press any key to continue...[/]");           
+            AnsiConsole.Markup($"[grey]{message}[/]");           
             Console.ReadKey(true);
         }
 
@@ -136,7 +139,7 @@ namespace Flashcards.Helpers
 
         public static void SingleFlashcardView(Flashcard flashcard)
         {
-            var table = new Table()             
+            var table = new Spectre.Console.Table()             
                 .Border(TableBorder.Rounded)
                 .BorderColor(Color.Blue)
                 .AddColumn(new TableColumn("[u]Question[/]").Centered())
@@ -176,6 +179,56 @@ namespace Flashcards.Helpers
             );
             AnsiConsole.Write(grid);
         }
-       
+
+        public static void FullStackView(StackDTO stack)
+        {
+            var infoPanel = new Panel
+                (
+                    Align.Center(
+                        new Markup(
+                            $"[bold yellow]Stack Name:[/] [white]{stack.Name}[/]\n[bold yellow]Number of Flashcards:[/] [white]{stack.Flashcards.Count}[/]"                        
+                        )
+                    )
+                )
+                .Header("Stack Information", Justify.Center)
+                .BorderColor(Color.Green)    
+                .Padding(8, 0)
+                .Expand();
+
+            var flashcardGrid = new Grid()
+                .AddColumn()
+                .AddColumn();
+            for (int i = 0; i < stack.Flashcards.Count; i += 2)
+            {
+                var panel1 = CreateFlashcardPanel(stack.Flashcards[i]);
+                Panel? panel2 = null;
+
+                if (i + 1 < stack.Flashcards.Count)
+                    panel2 = CreateFlashcardPanel(stack.Flashcards[i + 1]);
+
+                flashcardGrid.AddRow(panel1, panel2 ?? new Panel("")
+                {
+                    Border = BoxBorder.None,
+                    Padding = new Padding(0)
+                });
+            }
+
+            AnsiConsole.Write(infoPanel);
+            AnsiConsole.Write(flashcardGrid);
+        }
+
+        static Panel CreateFlashcardPanel(FlashcardDTO card)
+        {
+            var content = new Markup(
+                $"[bold blue]Q:[/] {card.Question}\n[bold green]A:[/] {card.Answer}"
+            );
+            return new Panel(content)
+                .Header("Flashcard", Justify.Center)
+                .Border(BoxBorder.Rounded)
+                .Padding (5, 0)
+                .Expand();
+            
+        }
+
     }
 }

@@ -110,6 +110,16 @@ namespace Flashcards.Views
                     break;
 
                 case StackMenu.ViewAllStacks:
+                    Console.Clear();
+                    List<StackDTO> stacks = _stackController.GetAllStackDtos();
+                    int counter = 1;
+                    foreach (StackDTO stack in stacks)
+                    {
+                        Display.FullStackView(stack);
+                        Display.PressToContinue($"Next Stack [[Page {counter++} of {stacks.Count}]]", "yellow");
+                        AnsiConsole.WriteLine("\n");                        
+                    }
+                    Display.PressToContinue();
                     break;
 
                 case StackMenu.ReturnToMainMenu:
@@ -129,7 +139,7 @@ namespace Flashcards.Views
                 Display.SetPageTitle("Manage");
                 Display.ShowTitle("Stack Management Menu");
 
-                Display.StackOverview(StackDTO.ToDto(stack));
+                Display.StackOverview(stack.ToDto());
 
                 var menuItems = Display.GetMenuItems<EditStackMenu>();                
                 var selectedOption = Display.PromptMenuSelection(menuItems);
