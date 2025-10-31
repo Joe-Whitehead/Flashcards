@@ -116,7 +116,7 @@ namespace Flashcards.Views
                     foreach (StackDTO stack in stacks)
                     {
                         Display.FullStackView(stack);
-                        Display.PressToContinue($"Next Stack [[Page {counter++} of {stacks.Count}]]", "yellow");
+                        Display.PressToContinue($"Next Stack [[Page {counter++} of {stacks.Count}]]");
                         AnsiConsole.WriteLine("\n");                        
                     }
                     Display.PressToContinue();
