@@ -141,12 +141,11 @@ namespace Flashcards.Helpers
         {
             var table = new Spectre.Console.Table()             
                 .Border(TableBorder.Rounded)
-                .BorderColor(Color.Blue)
-                .AddColumn(new TableColumn("[u]Question[/]").Centered())
-                .AddColumn(new TableColumn("[u]Answer[/]").Centered())
-                .AddRow(flashcard.Question, flashcard.Answer);     
-                table.Expand();
-
+                .BorderColor(Color.Red)
+                .AddColumn(new TableColumn("[yellow bold u]Question[/]").Centered())
+                .AddColumn(new TableColumn("[yellow bold u]Answer[/]").Centered())
+                .AddRow(flashcard.Question, flashcard.Answer);
+                
             AnsiConsole.Write(table);
         }
 
